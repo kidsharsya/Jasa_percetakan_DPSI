@@ -3,7 +3,7 @@ const path = require('path');
 const router = express.Router();
 const { verifyToken } = require('../middleware/auth');
 
-router.get('/', function (req, res, next) {
+router.get('/api', function (req, res, next) {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 

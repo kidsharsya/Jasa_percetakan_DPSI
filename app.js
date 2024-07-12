@@ -8,6 +8,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index'); // Memuat rute index// Memuat middleware autentikasi
 var app = express();
 
+// Import sequelize
+const { sequelize } = require('./models');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -19,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Menggunakan rute yang sudah dibuat dengan middleware autentikasi
-app.use('/', indexRouter); // Gunakan indexRouter di /api
+app.use('/api', indexRouter); // Gunakan indexRouter di /api
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -37,5 +40,15 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+sequelize
+  .sync({ force: false }) // force: false untuk menghindari overwrite data
+  .then(() => {
+    console.log('Database synchronized');
+    const PORT = process.env.PORT || 3000; // Use environment variable or default to 3000
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  });
 
 module.exports = app;

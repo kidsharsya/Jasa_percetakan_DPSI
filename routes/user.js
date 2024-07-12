@@ -54,6 +54,19 @@ router.get('/', verifyToken, async (req, res) => {
   }
 });
 
+// Get user by id
+router.get('/:id', verifyToken, async (req, res) => {
+  try {
+    const users = await User.findByPk(req.params.id, {
+      include: [{ model: Customer, as: 'customer' }],
+    });
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 // Edit user
 router.put('/:id', verifyToken, async (req, res) => {
   const userId = req.params.id;

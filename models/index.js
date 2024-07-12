@@ -19,6 +19,7 @@ if (config.use_env_variable) {
     host: process.env.DB_HOST,
     dialect: config.dialect,
     port: process.env.DB_PORT,
+    dialectModule: require('mysql2'),
     dialectOptions: {
       ssl: {
         rejectUnauthorized: false,
